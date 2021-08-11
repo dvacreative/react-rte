@@ -28,7 +28,9 @@
     "draft-js-import-html": ">=0.4.0",
     "draft-js-import-markdown": ">=0.3.0",
     "draft-js-utils": ">=0.2.0",
-    "immutable": "^3.8.1"
+    "immutable": "^3.8.1",
+    "sass": "^1.37.5",
+    "sass-loader": "7.3.1"
   },
   "peerDependencies": {
     "react": "0.14.x || 15.x.x || 16.x.x",
@@ -74,69 +76,7 @@
     "richtext",
     "editor"
   ],
-  "author": "sstur@me.com",
-  "contributors": [
-    {
-      "name": "Adam J. McIntyre",
-      "url": "https://github.com/amcintyre-cs"
-    },
-    {
-      "name": "André Schmidt",
-      "url": "https://github.com/andschdk"
-    },
-    {
-      "name": "Ben Herila",
-      "url": "https://github.com/bherila"
-    },
-    {
-      "name": "Harris Brakmic",
-      "url": "https://github.com/brakmic"
-    },
-    {
-      "name": "Forbes Lindesay",
-      "url": "https://github.com/ForbesLindesay"
-    },
-    {
-      "name": "Kristopher Craw",
-      "url": "https://github.com/KCraw"
-    },
-    {
-      "name": "Rory Hunter",
-      "url": "https://github.com/pugnascotia"
-    },
-    {
-      "name": "Ralph Schindler",
-      "url": "https://github.com/ralphschindler"
-    },
-    {
-      "name": "RaoHai",
-      "url": "https://github.com/RaoHai"
-    },
-    {
-      "name": "Jordan Kohl",
-      "url": "https://github.com/simpixelated"
-    },
-    {
-      "name": "Steffen Kolmer",
-      "url": "https://github.com/skolmer"
-    },
-    {
-      "name": "Simon Sturmer",
-      "url": "https://github.com/sstur"
-    },
-    {
-      "name": "Waldir Pimenta",
-      "url": "https://github.com/waldyrious"
-    },
-    {
-      "name": "Zach Silveira",
-      "url": "https://github.com/zackify"
-    },
-    {
-      "name": "Hyunyoung Cho",
-      "url": "https://github.com/ZeroCho"
-    }
-  ],
+  "author": "david@dvacreative.com",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/sstur/react-rte/issues"

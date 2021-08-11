@@ -5,19 +5,8 @@ import IconButton from './IconButton';
 import InputPopover from './InputPopover';
 import autobind from 'class-autobind';
 
-type Props = {
-  iconName: string;
-  showPopover: boolean,
-  defaultValue?: string,
-  checkOptions?: {
-    [key: string]: { label: string, defaultValue: boolean };
-  };
-  onTogglePopover: Function,
-  onSubmit: Function;
-};
-
 export default class PopoverIconButton extends Component {
-  props: Props;
+  props;
 
   constructor() {
     super(...arguments);

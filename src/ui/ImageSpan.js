@@ -7,28 +7,11 @@ import {Entity} from 'draft-js';
 
 import styles from './ImageSpan.css';
 
-import type {ContentState} from 'draft-js';
-
-// TODO: Use a more specific type here.
-type ReactNode = any;
-
-type Props = {
-  children: ReactNode;
-  entityKey: string;
-  contentState: ContentState,
-  className?: string;
-};
-
-type State = {
-  width: number;
-  height: number;
-};
-
 export default class ImageSpan extends Component {
-  props: Props;
-  state: State;
+  props;
+  state;
 
-  constructor(props: Props) {
+  constructor(props) {
     super(props);
     autobind(this);
     const entity = props.contentState.getEntity(props.entityKey);
@@ -95,7 +78,7 @@ export default class ImageSpan extends Component {
     console.log('image clicked');
   }
 
-  _handleResize(event: Object, data: Object) {
+  _handleResize(event, data) {
     const {width, height} = data.size;
     this.setState({width, height});
     Entity.mergeData(

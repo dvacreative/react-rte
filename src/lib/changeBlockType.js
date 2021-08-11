@@ -3,10 +3,10 @@
 import {EditorState} from 'draft-js';
 
 export default function changeBlockType(
-  editorState: EditorState,
-  blockKey: string,
-  newType: string,
-): EditorState {
+  editorState,
+  blockKey,
+  newType,
+){
   let content = editorState.getCurrentContent();
   let block = content.getBlockForKey(blockKey);
   let type = block.getType();

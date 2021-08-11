@@ -7,17 +7,8 @@ import ButtonWrap from './ButtonWrap';
 
 import styles from './IconButton.css';
 
-type Props = {
-  iconName: string;
-  isActive?: boolean;
-  children?: ReactNode;
-  className?: string;
-  label?: string;
-  isSwitch?: boolean;
-};
-
 export default class IconButton extends Component {
-  props: Props;
+  props;
 
   render() {
     let {props} = this;

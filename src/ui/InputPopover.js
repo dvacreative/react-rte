@@ -8,34 +8,16 @@ import cx from 'classnames';
 
 import styles from './InputPopover.css';
 
-type CheckOptionValues = {
-  [key: string]: boolean;
-};
-
-type Props = {
-  className?: string;
-  defaultValue?: string;
-  checkOptions?: {
-    [key: string]: { label: string, defaultValue: boolean };
-  };
-  onCancel: () => any;
-  onSubmit: (value: string, checkOptionValues: CheckOptionValues) => any;
-};
-
-type State = {
-  checkOptionValues: CheckOptionValues
-};
-
 export default class InputPopover extends Component {
-  props: Props;
-  state: State;
-  _inputRef: ?Object;
+  props;
+  state;
+  _inputRef;
 
   constructor() {
     super(...arguments);
     autobind(this);
     let {checkOptions} = this.props;
-    let checkOptionValues: CheckOptionValues = {};
+    let checkOptionValues = {};
     if (checkOptions) {
       for (let key of Object.keys(checkOptions)) {
         let {defaultValue} = checkOptions[key];
@@ -114,11 +96,11 @@ export default class InputPopover extends Component {
     });
   }
 
-  _setInputRef(inputElement: Object) {
+  _setInputRef(inputElement) {
     this._inputRef = inputElement;
   }
 
-  _onCheckOptionPress(key: string) {
+  _onCheckOptionPress(key) {
     let {checkOptionValues} = this.state;
     let oldValue = Boolean(checkOptionValues[key]);
     let newCheckOptionValues = {...checkOptionValues, [key]: !oldValue};
@@ -127,7 +109,7 @@ export default class InputPopover extends Component {
     });
   }
 
-  _onInputKeyPress(event: Object) {
+  _onInputKeyPress(event) {
     if (event.which === 13) {
       // Avoid submitting a <form> somewhere up the element tree.
       event.preventDefault();
@@ -140,7 +122,7 @@ export default class InputPopover extends Component {
     this.props.onSubmit(value, this.state.checkOptionValues);
   }
 
-  _onDocumentClick(event: Object) {
+  _onDocumentClick(event) {
     let rootNode = ReactDOM.findDOMNode(this);
     if (!rootNode.contains(event.target)) {
       // Here we pass the event so the parent can manage focus.
@@ -148,7 +130,7 @@ export default class InputPopover extends Component {
     }
   }
 
-  _onDocumentKeydown(event: Object) {
+  _onDocumentKeydown(event) {
     if (event.keyCode === 27) {
       this.props.onCancel();
     }

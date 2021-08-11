@@ -1,8 +1,19 @@
 /* @flow */
-import React, {Component} from 'react';
-import {CompositeDecorator, Editor, EditorState, Modifier, RichUtils, Entity} from 'draft-js';
+import React, { Component } from 'react';
+import {
+  CompositeDecorator,
+  Editor,
+  EditorState,
+  Modifier,
+  RichUtils,
+  Entity,
+} from 'draft-js';
 import getDefaultKeyBinding from 'draft-js/lib/getDefaultKeyBinding';
-import {getTextAlignBlockMetadata, getTextAlignClassName, getTextAlignStyles} from './lib/blockStyleFunctions';
+import {
+  getTextAlignBlockMetadata,
+  getTextAlignClassName,
+  getTextAlignStyles,
+} from './lib/blockStyleFunctions';
 import changeBlockDepth from './lib/changeBlockDepth';
 import changeBlockType from './lib/changeBlockType';
 import getBlocksInSelection from './lib/getBlocksInSelection';
@@ -13,18 +24,14 @@ import EditorToolbar from './lib/EditorToolbar';
 import EditorValue from './lib/EditorValue';
 import LinkDecorator from './lib/LinkDecorator';
 import ImageDecorator from './lib/ImageDecorator';
-import composite from './lib/composite';
 import cx from 'classnames';
 import autobind from 'class-autobind';
 import EventEmitter from 'events';
-import {BLOCK_TYPE} from 'draft-js-utils';
+import { BLOCK_TYPE } from 'draft-js-utils';
+import composite from './lib/composite';
 
 import './Draft.global.css';
-import styles from './RichTextEditor.css';
-
-import type {ContentBlock} from 'draft-js';
-import type {ToolbarConfig, CustomControl} from './lib/EditorToolbarConfig';
-import type {ImportOptions} from './lib/EditorValue';
+import styles from './RichTextEditor.scss';
 
 import ButtonGroup from './ui/ButtonGroup';
 import Button from './ui/Button';
@@ -42,133 +49,86 @@ const styleMap = {
   },
 };
 
-type ChangeHandler = (value: EditorValue) => any;
-
-type Props = {
-  className?: string;
-  toolbarClassName?: string;
-  editorClassName?: string;
-  value: EditorValue;
-  onChange?: ChangeHandler;
-  placeholder?: string;
-  customStyleMap?: {[style: string]: {[key: string]: any}};
-  handleReturn?: (event: Object) => boolean;
-  customControls?: Array<CustomControl>;
-  readOnly?: boolean;
-  toolbarHidden?: boolean;
-  disabled?: boolean; // Alias of readOnly
-  toolbarConfig?: ToolbarConfig;
-  toolbarOnBottom?: boolean;
-  blockStyleFn?: (block: ContentBlock) => ?string;
-  autoFocus?: boolean;
-  keyBindingFn?: (event: Object) => ?string;
-  rootStyle?: Object;
-  editorStyle?: Object;
-  toolbarStyle?: Object;
-  onBlur?: (event: Object) => void;
-};
-
 export default class RichTextEditor extends Component {
-  props: Props;
-  _keyEmitter: EventEmitter;
-  editor: HTMLDivElement;
-
   constructor() {
     super(...arguments);
     this._keyEmitter = new EventEmitter();
     autobind(this);
+    this.state = {
+      value: createEmptyValue(),
+      format: 'html',
+    };
   }
 
   componentDidMount() {
-    const {autoFocus} = this.props;
-
+    const { autoFocus } = this.props;
     if (!autoFocus) {
       return;
     }
-
     this._focus();
   }
 
   render() {
-    let {
-      value,
-      className,
-      toolbarClassName,
-      editorClassName,
-      placeholder,
-      customStyleMap,
-      readOnly,
-      toolbarHidden,
-      disabled,
-      toolbarConfig,
-      toolbarOnBottom,
-      blockStyleFn,
-      customControls,
-      keyBindingFn,
-      rootStyle,
-      toolbarStyle,
-      editorStyle,
-      ...otherProps // eslint-disable-line comma-dangle
-    } = this.props;
+    const value = this.state.value;
+    const className = 'react-rte-demo';
+    const toolbarClassName = 'demo-toolbar';
+    const editorClassName = 'demo-editor';
+    const placeholder = '...';
+
     let editorState = value.getEditorState();
-    customStyleMap = customStyleMap ? {...styleMap, ...customStyleMap} : styleMap;
 
     // If the user changes block type before entering any text, we can either
     // style the placeholder or hide it. Let's just hide it for now.
-    let combinedEditorClassName = cx({
-      [styles.editor]: true,
-      [styles.hidePlaceholder]: this._shouldHidePlaceholder(),
-    }, editorClassName);
-    if (readOnly == null) {
-      readOnly = disabled;
-    }
-    let editorToolbar;
+    let combinedEditorClassName = cx(
+      {
+        [styles.editor]: true,
+        [styles.hidePlaceholder]: this._shouldHidePlaceholder(),
+      },
+      editorClassName
+    );
 
-    if (!readOnly && !toolbarHidden) {
-      editorToolbar = (
-        <EditorToolbar
-          rootStyle={toolbarStyle}
-          isOnBottom={toolbarOnBottom}
-          className={toolbarClassName}
-          keyEmitter={this._keyEmitter}
-          editorState={editorState}
-          onChange={this._onChange}
-          focusEditor={this._focus}
-          toolbarConfig={toolbarConfig}
-          customControls={customControls}
-        />
-      );
-    }
+    let editorToolbar = (
+      <EditorToolbar
+        className={toolbarClassName}
+        keyEmitter={this._keyEmitter}
+        editorState={editorState}
+        onChange={this._onChange}
+        focusEditor={this._focus}
+      />
+    );
+    let textAlign = getTextAlignClassName
     return (
-      <div className={cx(styles.root, className)} style={rootStyle}>
-        { !toolbarOnBottom && editorToolbar }
-        <div className={combinedEditorClassName} style={editorStyle}>
+      <div className={cx(styles.root, className)}>
+        {editorToolbar}
+        <div className={combinedEditorClassName}>
+          <input
+            className={styles.currentTitle}
+            placeholder="Untitled"
+            name="currentTitle"
+          />
           <Editor
-            {...otherProps}
-            blockStyleFn={composite(defaultBlockStyleFn, blockStyleFn)}
-            customStyleMap={customStyleMap}
+            customStyleMap={styleMap}
+            blockStyleFn={composite(defaultBlockStyleFn, getTextAlignClassName)}
             editorState={editorState}
             handleReturn={this._handleReturn}
-            keyBindingFn={keyBindingFn || this._customKeyHandler}
+            keyBindingFn={this._customKeyHandler}
             handleKeyCommand={this._handleKeyCommand}
             onTab={this._onTab}
             onChange={this._onChange}
-            placeholder={placeholder}
+            placeholder="..."
             ariaLabel={placeholder || 'Edit text'}
             ref={(el) => {
               this.editor = el;
             }}
             spellCheck={true}
-            readOnly={readOnly}
           />
         </div>
-        { toolbarOnBottom && editorToolbar }
       </div>
     );
   }
 
-  _shouldHidePlaceholder(): boolean {
-    let editorState = this.props.value.getEditorState();
+  _shouldHidePlaceholder() {
+    let editorState = this.state.value.getEditorState();
     let contentState = editorState.getCurrentContent();
     if (!contentState.hasText()) {
       if (contentState.getBlockMap().first().getType() !== 'unstyled') {
@@ -178,8 +138,8 @@ export default class RichTextEditor extends Component {
     return false;
   }
 
-  _handleReturn(event: Object): boolean {
-    let {handleReturn} = this.props;
+  _handleReturn(event) {
+    let { handleReturn } = this.props;
     if (handleReturn != null && handleReturn(event)) {
       return true;
     }
@@ -196,8 +156,8 @@ export default class RichTextEditor extends Component {
   }
 
   // `shift + return` should insert a soft newline.
-  _handleReturnSoftNewline(event: Object): boolean {
-    let editorState = this.props.value.getEditorState();
+  _handleReturnSoftNewline(event) {
+    let editorState = this.state.value.getEditorState();
     if (isSoftNewlineEvent(event)) {
       let selection = editorState.getSelection();
       if (selection.isCollapsed()) {
@@ -212,7 +172,7 @@ export default class RichTextEditor extends Component {
           newSelection,
           '\n',
           block.getInlineStyleAt(newSelection.getStartOffset()),
-          null,
+          null
         );
         this._onChange(
           EditorState.push(editorState, newContent, 'insert-fragment')
@@ -225,8 +185,8 @@ export default class RichTextEditor extends Component {
 
   // If the cursor is in an empty list item when return is pressed, then the
   // block type should change to normal (end the list).
-  _handleReturnEmptyListItem(): boolean {
-    let editorState = this.props.value.getEditorState();
+  _handleReturnEmptyListItem() {
+    let editorState = this.state.value.getEditorState();
     let selection = editorState.getSelection();
     if (selection.isCollapsed()) {
       let contentState = editorState.getCurrentContent();
@@ -234,9 +194,10 @@ export default class RichTextEditor extends Component {
       let block = contentState.getBlockForKey(blockKey);
       if (isListItem(block) && block.getLength() === 0) {
         let depth = block.getDepth();
-        let newState = (depth === 0) ?
-          changeBlockType(editorState, blockKey, BLOCK_TYPE.UNSTYLED) :
-          changeBlockDepth(editorState, blockKey, depth - 1);
+        let newState =
+          depth === 0
+            ? changeBlockType(editorState, blockKey, BLOCK_TYPE.UNSTYLED)
+            : changeBlockDepth(editorState, blockKey, depth - 1);
         this._onChange(newState);
         return true;
       }
@@ -246,8 +207,8 @@ export default class RichTextEditor extends Component {
 
   // If the cursor is at the end of a special block (any block type other than
   // normal or list item) when return is pressed, new block should be normal.
-  _handleReturnSpecialBlock(): boolean {
-    let editorState = this.props.value.getEditorState();
+  _handleReturnSpecialBlock() {
+    let editorState = this.state.value.getEditorState();
     let selection = editorState.getSelection();
     if (selection.isCollapsed()) {
       let contentState = editorState.getCurrentContent();
@@ -269,15 +230,15 @@ export default class RichTextEditor extends Component {
     return false;
   }
 
-  _onTab(event: Object): ?string {
-    let editorState = this.props.value.getEditorState();
+  _onTab(event) {
+    let editorState = this.state.value.getEditorState();
     let newEditorState = RichUtils.onTab(event, editorState, MAX_LIST_DEPTH);
     if (newEditorState !== editorState) {
       this._onChange(newEditorState);
     }
   }
 
-  _customKeyHandler(event: Object): ?string {
+  _customKeyHandler(event) {
     // Allow toolbar to catch key combinations.
     let eventFlags = {};
     this._keyEmitter.emit('keypress', event, eventFlags);
@@ -288,8 +249,8 @@ export default class RichTextEditor extends Component {
     }
   }
 
-  _handleKeyCommand(command: string): boolean {
-    let editorState = this.props.value.getEditorState();
+  _handleKeyCommand(command) {
+    let editorState = this.state.value.getEditorState();
     let newEditorState = RichUtils.handleKeyCommand(editorState, command);
     if (newEditorState) {
       this._onChange(newEditorState);
@@ -299,8 +260,13 @@ export default class RichTextEditor extends Component {
     }
   }
 
-  _onChange(editorState: EditorState) {
-    let {onChange, value} = this.props;
+  onChange(value) {
+    this.setState({ value });
+  }
+
+  _onChange(editorState) {
+    let value = this.state.value;
+    let onChange = this.onChange;
     if (onChange == null) {
       return;
     }
@@ -310,33 +276,31 @@ export default class RichTextEditor extends Component {
     onChange(newValue);
   }
 
-  _handleInlineImageSelection(editorState: EditorState) {
+  _handleInlineImageSelection(editorState) {
     let selection = editorState.getSelection();
     let blocks = getBlocksInSelection(editorState);
 
     const selectImage = (block, offset) => {
       const imageKey = block.getEntityAt(offset);
-      Entity.mergeData(imageKey, {selected: true});
+      Entity.mergeData(imageKey, { selected: true });
     };
 
     let isInMiddleBlock = (index) => index > 0 && index < blocks.size - 1;
-    let isWithinStartBlockSelection = (offset, index) => (
-      index === 0 && offset > selection.getStartOffset()
-    );
-    let isWithinEndBlockSelection = (offset, index) => (
-      index === blocks.size - 1 && offset < selection.getEndOffset()
-    );
+    let isWithinStartBlockSelection = (offset, index) =>
+      index === 0 && offset > selection.getStartOffset();
+    let isWithinEndBlockSelection = (offset, index) =>
+      index === blocks.size - 1 && offset < selection.getEndOffset();
 
     blocks.toIndexedSeq().forEach((block, index) => {
-      ImageDecorator.strategy(
-        block,
-        (offset) => {
-          if (isWithinStartBlockSelection(offset, index) ||
-              isInMiddleBlock(index) ||
-              isWithinEndBlockSelection(offset, index)) {
-            selectImage(block, offset);
-          }
-        });
+      ImageDecorator.strategy(block, (offset) => {
+        if (
+          isWithinStartBlockSelection(offset, index) ||
+          isInMiddleBlock(index) ||
+          isWithinEndBlockSelection(offset, index)
+        ) {
+          selectImage(block, offset);
+        }
+      });
     });
   }
 
@@ -345,7 +309,7 @@ export default class RichTextEditor extends Component {
   }
 }
 
-function defaultBlockStyleFn(block: ContentBlock): string {
+function defaultBlockStyleFn(block) {
   let result = styles.block;
   switch (block.getType()) {
     case 'unstyled':
@@ -361,11 +325,12 @@ function defaultBlockStyleFn(block: ContentBlock): string {
 
 const decorator = new CompositeDecorator([LinkDecorator, ImageDecorator]);
 
-function createEmptyValue(): EditorValue {
+function createEmptyValue() {
   return EditorValue.createEmpty(decorator);
 }
 
-function createValueFromString(markup: string, format: string, options?: ImportOptions): EditorValue {
+// need to fix
+function createValueFromString(markup, format, options) {
   return EditorValue.createFromString(markup, format, decorator, options);
 }
 

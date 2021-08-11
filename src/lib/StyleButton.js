@@ -3,13 +3,9 @@ import React, {Component} from 'react';
 import IconButton from '../ui/IconButton';
 import autobind from 'class-autobind';
 
-type Props = {
-  style: string;
-  onToggle: (style: string) => any;
-};
 
 export default class StyleButton extends Component {
-  props: Props;
+  props
 
   constructor() {
     super(...arguments);

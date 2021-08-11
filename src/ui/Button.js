@@ -6,19 +6,8 @@ import autobind from 'class-autobind';
 
 import styles from './Button.css';
 
-type EventHandler = (event: Event) => any;
-
-type Props = {
-  children?: ReactNode;
-  className?: string;
-  focusOnClick?: boolean;
-  formSubmit?: boolean;
-  isDisabled?: boolean;
-  onMouseDown?: EventHandler;
-};
-
 export default class Button extends Component {
-  props: Props;
+  props;
 
   constructor() {
     super(...arguments);
@@ -38,7 +27,7 @@ export default class Button extends Component {
     );
   }
 
-  _onMouseDownPreventDefault(event: Event) {
+  _onMouseDownPreventDefault(event) {
     event.preventDefault();
     let {onMouseDown} = this.props;
     if (onMouseDown != null) {

@@ -1,14 +1,12 @@
 // @flow
 
-function composite<T, U>(
-  defaultFunc: (input: T) => U,
-  customFunc?: (input: T) => ?U,
-): (input: T) => U {
-  return (input: T) => {
+function composite(defaultFunc, customFunc) {
+  return (input) => {
+    console.log(input);
     if (customFunc) {
       let result = customFunc(input);
-      if (result != null) {
-        return result;
+      if (result !== '') {
+        return result; 
       }
     }
     return defaultFunc(input);
