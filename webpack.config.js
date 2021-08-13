@@ -52,10 +52,10 @@ var rules = [
 ];
 
 module.exports = [{
-  entry: './src/RichTextEditor.js',
+  entry: './src/editor/EditorComp.js',
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'react-rte.js',
+    filename: 'editor-comp.js',
     libraryTarget: 'commonjs2',
   },
   externals: {
@@ -75,11 +75,11 @@ module.exports = [{
     new webpack.optimize.ModuleConcatenationPlugin(),
   ],
 }, {
-  entry: './src/demo.js',
+  entry: './src/index.js',
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/dist/',
-    filename: 'demo.js',
+    filename: 'index.js',
   },
   module: {
     rules: rules,

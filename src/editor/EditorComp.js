@@ -49,7 +49,7 @@ const styleMap = {
   },
 };
 
-export default class RichTextEditor extends Component {
+export default class EditorComp extends Component {
   constructor() {
     super(...arguments);
     this._keyEmitter = new EventEmitter();
@@ -335,7 +335,7 @@ function createValueFromString(markup, format, options) {
 }
 
 // $FlowIssue - This should probably not be done this way.
-Object.assign(RichTextEditor, {
+Object.assign(EditorComp, {
   EditorValue,
   decorator,
   createEmptyValue,

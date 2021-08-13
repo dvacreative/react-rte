@@ -3,7 +3,7 @@ const {describe, it} = global;
 import React from 'react';
 import ShallowRenderer from 'react-test-renderer/shallow';
 import expect from 'expect';
-import RichTextEditor, {createEmptyValue} from '../RichTextEditor';
+import RichTextEditor, {createEmptyValue} from '../../RichTextEditor';
 
 describe('RichTextEditor', () => {
   it('should render', () => {

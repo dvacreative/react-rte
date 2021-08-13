@@ -1,7 +1,7 @@
 {
-  "name": "react-rte",
-  "version": "0.16.3",
-  "description": "React Rich Text Editor",
+  "name": "notedb",
+  "version": "0.0.1",
+  "description": "notedb",
   "main": "dist/react-rte.js",
   "files": [
     "lib",
@@ -68,14 +68,6 @@
     "type": "git",
     "url": "git+https://github.com/sstur/react-rte.git"
   },
-  "keywords": [
-    "reactjs",
-    "draftjs",
-    "contenteditable",
-    "wysiwyg",
-    "richtext",
-    "editor"
-  ],
   "author": "david@dvacreative.com",
   "license": "ISC",
   "bugs": {
